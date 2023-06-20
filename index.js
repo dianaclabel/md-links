@@ -2,20 +2,31 @@
 //   // ...
 // };
 
-const { fnIsAbsolute, fnConvertToRelative } = require("./md-links.js");
+const { fnIsAbsolute, fnConvertToRelative, verifyRoute, veriFyIsFileOrDirectory } = require("./md-links.js");
 
 // funcion es absoluta
 function mdLinks(route) {
 
-  const trueIsAbsolute = fnIsAbsolute(route);
+  let convertRouteRelative;
+  const resultIsAbsolute = fnIsAbsolute(route);
   
-  if (trueIsAbsolute){
-    return trueIsAbsolute
+  if (resultIsAbsolute){
+      const existRoute = verifyRoute(route);
+      console.log(existRoute);
+
+      if(existRoute){
+        const result = veriFyIsFileOrDirectory(route);
+        console.log(result);
+        return result;
+      }
+      
   }else{
-  const convertRouteRelative = fnConvertToRelative(route);
+   convertRouteRelative = fnConvertToRelative(route);
     mdLinks(convertRouteRelative);
   }
  
 }
+// En MD-links retornar promesas
+mdLinks("C:/Users/diana/Documents/Projects/Laboratoria/md-links/README.md");
 
-mdLinks('C:/Users/diana/Documents/Projects/Laboratoria/md-links/README.md');
+
