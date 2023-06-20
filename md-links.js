@@ -11,7 +11,13 @@ function fnIsAbsolute(route) {
   }
 }
 
-// convertira a una ruta absoluta
+// convertira a una ruta realtiva a absoluta
+
+function fnConvertToRelative(route){
+    return path.resolve(route);  
+}
+
+// fnConvertToRelative('m-linksREADME.md');
 
 
 
@@ -20,5 +26,5 @@ function fnIsAbsolute(route) {
 
 
 module.exports = {
-  fnIsAbsolute,
+  fnIsAbsolute, fnConvertToRelative,
 };
