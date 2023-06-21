@@ -7,26 +7,37 @@ const { fnIsAbsolute, fnConvertToRelative, verifyRoute, veriFyIsFileOrDirectory 
 // funcion es absoluta
 function mdLinks(route) {
 
-  let convertRouteRelative;
+  
   const resultIsAbsolute = fnIsAbsolute(route);
   
   if (resultIsAbsolute){
+
+      let result;
+
+      // corrobora si la ruta exites
       const existRoute = verifyRoute(route);
       console.log(existRoute);
 
       if(existRoute){
-        const result = veriFyIsFileOrDirectory(route);
+        //verifica si es un  archivo o directorio
+        result = veriFyIsFileOrDirectory(route);
         console.log(result);
         return result;
+      }else{
+        console.error("Ruta no exite", Error);
+      }
+
+      if(result === "directory"){
+        readDirectory(route);
       }
       
   }else{
-   convertRouteRelative = fnConvertToRelative(route);
+   const convertRouteRelative = fnConvertToRelative(route);
     mdLinks(convertRouteRelative);
   }
  
 }
 // En MD-links retornar promesas
-mdLinks("C:/Users/diana/Documents/Projects/Laboratoria/md-links/README.md");
+mdLinks("C:/Users/diana/Documents/Projects/Laboratoria/md-links");
 
 
