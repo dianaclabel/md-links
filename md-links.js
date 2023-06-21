@@ -53,7 +53,7 @@ function veriFyIsFileOrDirectory (route){
   }
 }
 
-//Mostrar lista de archivos
+//Mostrar lista de archivos de un directorio
 
 function readDirectory (directoryRoute){
   // promisify es una funcion de modulo util, convierte en una funcion callback a funcion que devulve una promesa
@@ -62,13 +62,16 @@ function readDirectory (directoryRoute){
   .then(files => {
     console.log(files)
     files.forEach(file => {
-        console.log(file);
+        return file
     });
   })
   .catch(error => {
     console.log('Error al obtener los archivos:', error);
   });
 }
+
+//Leer archivos con extension .md
+
 
 
 // console.log(veriFyIsFileOrDirectory ("C:/Users/diana/Documents/Projects/Laboratoria/md-links/README.md"));
