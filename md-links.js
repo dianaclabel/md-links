@@ -70,15 +70,23 @@ function readDirectory (directoryRoute){
   });
 }
 
-//Leer archivos con extension .md
+// Leer archivo .md
+function readFile(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (error, data) => {
+			if (error) return reject(error);
+			return resolve(data);
+		});
+  });
 
+} 
 
 
 // console.log(veriFyIsFileOrDirectory ("C:/Users/diana/Documents/Projects/Laboratoria/md-links/README.md"));
 
-// console.log( readDirectory("C:/Users/diana/Documents/Projects/Laboratoria/md-link"));
+console.log( readDirectory("C:/Users/diana/Documents/Projects/Laboratoria/social-network"));
 
 
 module.exports = {
-  fnIsAbsolute, fnConvertToRelative, verifyRoute, veriFyIsFileOrDirectory, readDirectory
+  fnIsAbsolute, fnConvertToRelative, verifyRoute, veriFyIsFileOrDirectory, readDirectory, readFile,
 };
