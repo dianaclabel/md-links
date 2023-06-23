@@ -2,7 +2,7 @@
 //   // ...
 // };
 
-const { fnIsAbsolute, fnConvertToRelative: fnConvertToAbsolute, verifyRoute, veriFyIsFileOrDirectory, readDirectory } = require("./main.js");
+const { fnIsAbsolute , fnConvertToAbsolute, verifyRoute, veriFyIsFileOrDirectory, readDirectory , readFile , createPathFile } = require("./main.js");
 
 // // funcion es absoluta
 // function mdLinks(route, {}) {
@@ -42,38 +42,52 @@ const mdLinks = (path, options) => {
   const pathIsAbsolute = fnIsAbsolute(path);
   
   if (!pathIsAbsolute) {
-    console.log("false");
     const absoluteVersion = fnConvertToAbsolute(path);
+    console.log("se covierte a ruta absoluta: "+ absoluteVersion)
     return mdLinks(absoluteVersion);
   }
 
   // Verificación de existencia de la ruta
   const pathExists = verifyRoute(path);
+  console.log("La ruta existe: " + pathExists);
+
   if (!pathExists) {
     console.error("El path ingresado es inválido");
     return;
   }
+  
 
-  const filesMd = [];
-
+  
   const pathType = veriFyIsFileOrDirectory(path);
-
+  console.log("La ruta es de tipo: " + pathType);
+  
+  let filesMd = [];
   if(pathType === "directory"){
-    const fileNames = readDirectory(path);
-    fileNames.then(files => {
+    //retorna un array de nombres de archivos
+     readDirectory(path)
+      .then(fileNames => {
 
-      files.forEach(file => {
-        
-      if(!file.endsWith(".md")) return;
-      const fileContent = readSingleFileAsText(path.join(path, fileName));
-      filesMd.push(fileContent)
-      }) 
+        fileNames.forEach(fileName => {
 
-      if (filesMd.length === 0) {
-        console.error("No se encontraron achivos .md");
-        return;
-      }
-    })
+          if(!fileName.endsWith(".md")) return;
+
+          let pathFile =createPathFile(path, fileName);
+          console.log(pathFile);
+
+          readFile(pathFile)
+          .then(data => {
+            filesMd.push(data);
+            console.log(data)})
+          .catch(error => console.log('Este archivo no se puede leer',error))
+          // const fileContent = readSingleFileAsText(path.join(path, fileName));
+          // filesMd.push(fileContent)
+        }) 
+
+        if (filesMd.length === 0) {
+          console.error("No se encontraron achivos .md");
+          return;
+        }
+      })
     .catch(error => {
       console.log('Error al obtener los archivos:', error);
     });
@@ -83,21 +97,21 @@ const mdLinks = (path, options) => {
       console.error("El archivo no es md");
       return;
     }
-    const fileContent = readSingleFileAsText(path);
-      files.push(fileContent)
-  }
 
-    
+    readFile(path)
+    .then(data => {
+        filesMd.push(data);
+        console.log(data)})
+        .catch(error => console.log('Este archivo no se puede leer',error))
+      } 
+      
+  console.log(filesMd)
 
-
-  // console.log("true");
-
-}
-
+};
 
 
 
 // En MD-links retornar promesas
 // mdLinks("C:/Users/diana/Documents/Projects/Laboratoria/md-links");
 
-mdLinks("Projects/Laboratoria/md-links")
+mdLinks("files-md/prueba.md")

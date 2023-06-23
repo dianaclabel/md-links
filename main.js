@@ -55,24 +55,35 @@ function veriFyIsFileOrDirectory (route){
 }
 
 //Mostrar lista de archivos de un directorio
+// retorna el nombre de los archivos 
 
 function readDirectory (directoryRoute){
   // promisify es una funcion de modulo util, convierte en una funcion callback a funcion que devulve una promesa
   const readdir = promisify(fs.readdir);
-  return readdir(directoryRoute)
-  // .then(files => {
-  //   console.log(files) // es un array
-  //   files.forEach(file => {
-  //       return file
-  //   });
-  // })
-  // .catch(error => {
-  //   console.log('Error al obtener los archivos:', error);
-  // });
+  return readdir(directoryRoute);
 }
 
 //Leer archivos 
+// retorna el contenido - data del archivo
 
+function readFile(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf8', (error, data) => {
+			if (error) return reject(error);
+			return resolve(data);
+		});
+  });
+}   
+
+// creacion de ruta con el nombre de archivo iterado
+// retorna la ruta del archivo
+
+function createPathFile(route,fileName){
+  return pathFile = path.join(route,fileName)
+   
+};
+
+// createPathFile("C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md","/prueba2.md");
 
 
 
@@ -82,5 +93,5 @@ function readDirectory (directoryRoute){
 
 
 module.exports = {
-  fnIsAbsolute, fnConvertToRelative: fnConvertToAbsolute, verifyRoute, veriFyIsFileOrDirectory, readDirectory
+  fnIsAbsolute , fnConvertToAbsolute, verifyRoute, veriFyIsFileOrDirectory, readDirectory , readFile , createPathFile
 };
