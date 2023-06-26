@@ -44,3 +44,21 @@ Promise.all(promisesFiles).then((contenidos) => {
     console.log(contenidos[1]);
     console.log("Fin")
 })
+
+
+// const mdText = `
+// # Hola
+
+// ## Hello
+
+// Hola mundo aquí entras a [Google](https://google.com) jejeje.
+// Hola mundo aquí entras a [Apple](https://apple.com) jejeje.
+// `
+
+// const matcher = /[Google](https://google.com)/;
+
+// Validación
+const pattern = /^[abc][abc][abc]$/
+const result = pattern.test("bc");
+
+console.log(result);
