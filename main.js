@@ -58,22 +58,46 @@ function veriFyIsFileOrDirectory (route){
 // retorna el nombre de los archivos 
 
 function readDirectory (directoryRoute){
-  // promisify es una funcion de modulo util, convierte en una funcion callback a funcion que devulve una promesa
+  // promisify es una funcion de modulo util, convierte en una funcion callback a funcion que devuelve una promesa
   const readdir = promisify(fs.readdir);
   return readdir(directoryRoute);
 }
 
+/**
+ * Función para leer los enlaces de un Markdown string
+ * @param {string} data 
+ */
+function readLinks(data){
+  // [Acerca de Node.js - Documentación oficial](https://nodejs.org/es/about/)
+
+  const iterable = data.matchAll(/\[([^\]]+)\]\(([^\)]+)\)/g);
+  // se convierte el iterable en un array
+  const results = [...iterable];
+
+  const links = results.map(result => ({ text : result[1], href: result[2] }))
+  
+  return links;
+}
+
 //Leer archivos 
 // retorna el contenido - data del archivo
-
 function readFile(filePath) {
-  return new Promise((resolve, reject) => {
+   return new Promise((resolve, reject) => {
     fs.readFile(filePath, 'utf8', (error, data) => {
 			if (error) return reject(error);
-			return resolve(data);
-		});
+			resolve(data);
+		}); 
   });
-}   
+} 
+
+//Este codigo va en md-liks
+// readFile("C:/Users/diana/Documents/Projects/Laboratoria/md-links/README.md")
+// .then(data => {
+//   // console.log(data) 
+//   readLinks(data);
+// })
+// .catch(error => console.log('Este archivo no se puede leer',error)); 
+
 
 // creacion de ruta con el nombre de archivo iterado
 // retorna la ruta del archivo
@@ -84,14 +108,11 @@ function createPathFile(route,fileName){
 };
 
 // createPathFile("C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md","/prueba2.md");
-
-
-
 // console.log(veriFyIsFileOrDirectory ("C:/Users/diana/Documents/Projects/Laboratoria/md-links/README.md"));
 // console.log( readDirectory("C:/Users/diana/Documents/Projects/Laboratoria/md-links"));
 
 
 
 module.exports = {
-  fnIsAbsolute , fnConvertToAbsolute, verifyRoute, veriFyIsFileOrDirectory, readDirectory , readFile , createPathFile
+  fnIsAbsolute , fnConvertToAbsolute, verifyRoute, veriFyIsFileOrDirectory, readDirectory , readFile, readLinks, createPathFile
 };
