@@ -3,32 +3,34 @@ const fs = require("fs");
 const { promisify } = require('util');
 
 
-// funcion para verificar si es una funcion absoluta
+// funcion para verificar si es una ruta absoluta
+// retorna booleano
 
 function fnIsAbsolute(route) {
   try {
     return  path.isAbsolute(route);
     
   } catch (error) {
-    console.log("Error", error);
+    console.log('Error: La ruta no es absoliuta ', error); 
   }
 }
 
-// convertira a una ruta realtiva a absoluta
+// convertira una ruta relativa a absoluta
+// retorna  una ruta relativa en string
 
-function fnConvertToRelative(route){
+function fnConvertToAbsolute(route){
+    
     return path.resolve(route);  
 }
 
-// Validar si la ruta es valida
+// verificación de existencia
+// retorna booleano
 
 function verifyRoute(route){
   try {
-    // Verificar si la ruta existe, se utiliza poreu la funcion de ex
     fs.accessSync(route);
    return true;
   } catch (error) {
-    console.log("Error",'La ruta no existe.');
     return false
   }
 }
@@ -37,56 +39,80 @@ function verifyRoute(route){
 
 function veriFyIsFileOrDirectory (route){
   try {
-      const inspectRoute = path.resolve(route);
-      const stats = fs.statSync(inspectRoute); // Obtener información sobre el archivo o directorio especificado (inspectRoute)
-       // devuelve un objeto stats, contiene detalles sobre el archivo o directorio.
-      if (stats.isFile()) {
+    const inspectRoute = path.resolve(route);
+    const stats = fs.statSync(inspectRoute); // Obtener información sobre el archivo o directorio especificado (inspectRoute)
+     // devuelve un objeto stats, contiene detalles sobre el archivo o directorio.
+    if (stats.isFile()) {
         return 'file';
-      } else if(stats.isDirectory()){
+    } else if(stats.isDirectory()){
         return 'directory';
-      }else{
+    }else{
         return 'Desconocido';
-      }
-        } catch (error) {
+    }
+  } catch (error) {
             console.log('Error: Archivo o directorio roto ', error); 
-    //   }
   }
 }
 
 //Mostrar lista de archivos de un directorio
+// retorna el nombre de los archivos 
 
 function readDirectory (directoryRoute){
-  // promisify es una funcion de modulo util, convierte en una funcion callback a funcion que devulve una promesa
+  // promisify es una funcion de modulo util, convierte en una funcion callback a funcion que devuelve una promesa
   const readdir = promisify(fs.readdir);
-  return readdir(directoryRoute)
-  .then(files => {
-    console.log(files)
-    files.forEach(file => {
-        return file
-    });
-  })
-  .catch(error => {
-    console.log('Error al obtener los archivos:', error);
-  });
+  return readdir(directoryRoute);
 }
 
-// Leer archivo .md
+/**
+ * Función para leer los enlaces de un Markdown string
+ * @param {string} data 
+ */
+function readLinks(data){
+  // [Acerca de Node.js - Documentación oficial](https://nodejs.org/es/about/)
+
+  const iterable = data.matchAll(/\[([^\]]+)\]\(([^\)]+)\)/g);
+  // se convierte el iterable en un array
+  const results = [...iterable];
+
+  const links = results.map(result => ({ text : result[1], href: result[2] }))
+  
+  return links;
+}
+
+//Leer archivos 
+// retorna el contenido - data del archivo
 function readFile(filePath) {
-  return new Promise((resolve, reject) => {
+   return new Promise((resolve, reject) => {
     fs.readFile(filePath, 'utf8', (error, data) => {
 			if (error) return reject(error);
-			return resolve(data);
-		});
+			resolve(data);
+		}); 
   });
-
 } 
 
+//Este codigo va en md-liks
+// readFile("C:/Users/diana/Documents/Projects/Laboratoria/md-links/README.md")
+// .then(data => {
+//   // console.log(data) 
+//   readLinks(data);
+// })
+// .catch(error => console.log('Este archivo no se puede leer',error)); 
 
+
+// creacion de ruta con el nombre de archivo iterado
+// retorna la ruta del archivo
+
+function createPathFile(route,fileName){
+  return pathFile = path.join(route,fileName)
+   
+};
+
+// createPathFile("C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md","/prueba2.md");
 // console.log(veriFyIsFileOrDirectory ("C:/Users/diana/Documents/Projects/Laboratoria/md-links/README.md"));
+// console.log( readDirectory("C:/Users/diana/Documents/Projects/Laboratoria/md-links"));
 
-console.log( readDirectory("C:/Users/diana/Documents/Projects/Laboratoria/social-network"));
 
 
 module.exports = {
-  fnIsAbsolute, fnConvertToRelative, verifyRoute, veriFyIsFileOrDirectory, readDirectory, readFile,
+  fnIsAbsolute , fnConvertToAbsolute, verifyRoute, veriFyIsFileOrDirectory, readDirectory , readFile, readLinks, createPathFile
 };
