@@ -1,48 +1,77 @@
-// module.exports = () => {
-//   // ...
-// };
+const { fnIsAbsolute , fnConvertToAbsolute, verifyRoute, veriFyIsFileOrDirectory, readDirectory , readFile , createPathFile, readLinks } = require("./main.js");
 
-const { fnIsAbsolute, fnConvertToRelative, verifyRoute, veriFyIsFileOrDirectory, readDirectory } = require("./md-links.js");
-
-// funcion es absoluta
-function mdLinks(route) {
-
+function mdLinks(path){
+    // Manejo de ruta relativa
+  const pathIsAbsolute = fnIsAbsolute(path);
   
-  const resultIsAbsolute = fnIsAbsolute(route);
-  
-  if (resultIsAbsolute){
-
-      let result;
-
-      // corrobora si la ruta exites
-      const existRoute = verifyRoute(route);
-      console.log("La ruta existe:" + existRoute);
-
-      if(existRoute){
-        //verifica si es un  archivo o directorio
-        result = veriFyIsFileOrDirectory(route);
-
-        console.log(result);  
-      }else{
-        console.error("Ruta no exite");
-      }
-
-      if(result === "directory"){
-        readDirectory(route);
-      }
-      
-  }else{
-   const convertRouteRelative = fnConvertToRelative(route);
-    mdLinks(convertRouteRelative);
+  if (!pathIsAbsolute) {
+    const absoluteVersion = fnConvertToAbsolute(path);
+    console.log("se covierte a ruta absoluta: "+ absoluteVersion)
+    return mdLinks(absoluteVersion);
   }
- 
+
+  // Verificación de existencia de la ruta
+  const pathExists = verifyRoute(path);
+  console.log("La ruta existe: " + pathExists);
+
+  if (!pathExists) {
+    console.error("El path ingresado es inválido");
+    return;
+  }
+
+  const pathType = veriFyIsFileOrDirectory(path);
+  console.log("La ruta es de tipo: " + pathType);
+
+  readFileOrDirectory(path, pathType)
+    .then(links => {
+      console.log(links);
+    })
+    .catch(error => {
+      console.log('Error al obtener los archivos:', error);
+    });;
+
+}
+
+function readFileOrDirectory(path, type){
+    if(type === "directory"){
+        
+         return readDirectory(path)
+          .then(fileNames => {
+              // array de nombres de archivos
+              console.log("Nombres de los archivos de directorio: ", fileNames);
+
+              const promisesFilesLinks = fileNames
+                .filter(fileName => fileName.endsWith(".md"))
+                .map(fileName => {
+                  let pathFile = createPathFile(path, fileName);
+                  console.log("Ruta de archivo creada:", pathFile);
+                  //retorna los links del archivo
+                  return readFile(pathFile).then(data => readLinks(data))
+                }) 
+
+                //Se retorna todas las promesas
+              return Promise.all(promisesFilesLinks);
+
+            })
+        
+        
+    }else if (type === "file") {
+    
+        if (!path.endsWith(".md")) {
+          console.error("El archivo no es md");
+          return;
+        }
+    
+        return readFile(path)
+        .then(data => readLinks(data))
+        .catch(error => console.log('Este archivo no se puede leer',error))
+    } 
+          
 }
 
 
+mdLinks("C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md");
 
 
 
-// En MD-links retornar promesas
-// mdLinks("C:/Users/diana/Documents/Projects/Laboratoria/md-links");
 
-mdLinks("C:/Users/diana/Documents/Projects/Laboratoria/md-links/md-links.js")
