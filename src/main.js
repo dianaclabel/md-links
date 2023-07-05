@@ -60,6 +60,17 @@ function readDirectory(directoryRoute) {
   return readdir(directoryRoute);
 }
 
+//Leer archivos
+// retorna el contenido - data del archivo
+function readFile(filePath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, "utf8", (error, data) => {
+      if (error) return reject(error);
+      resolve(data);
+    });
+  });
+}
+
 function readLinks(data) {
   // [Acerca de Node.js - Documentación oficial](https://nodejs.org/es/about/)
 
@@ -75,27 +86,6 @@ function readLinks(data) {
   return links;
 }
 
-//Leer archivos
-// retorna el contenido - data del archivo
-function readFile(filePath) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, "utf8", (error, data) => {
-      if (error) return reject(error);
-      resolve(data);
-    });
-  });
-}
-
-// Este codigo va en md-liks
-// readFile(
-//   "C:/Users/diana/Documents/Projects/Laboratoria/md-links/test/files-md/prueba2.md"
-// )
-//   .then((data) => {
-//     // console.log(data)
-//     readLinks(data);
-//   })
-//   .catch((error) => console.log("Este archivo no se puede leer", error));
-
 // creacion de ruta con el nombre de archivo iterado
 // retorna la ruta del archivo
 
@@ -103,12 +93,8 @@ function createPathFile(route, fileName) {
   return (pathFile = path.join(route, fileName));
 }
 
-// createPathFile("C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md","/prueba2.md");
-// console.log(veriFyIsFileOrDirectory ("C:/Users/diana/Documents/Projects/Laboratoria/md-links/README.md"));
-// console.log( readDirectory("C:/Users/diana/Documents/Projects/Laboratoria/md-links"));
-
-function validate(url) {
-  return fetch(url)
+function validateLink(href) {
+  return fetch(href)
     .then((response) => {
       const status = response.status;
       const ok = response.ok ? "ok" : "fail";
@@ -119,7 +105,9 @@ function validate(url) {
     });
 }
 
-validate("https://api.nijrex.pe/asdasd");
+// createPathFile("C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md","/prueba2.md");
+// console.log(veriFyIsFileOrDirectory ("C:/Users/diana/Documents/Projects/Laboratoria/md-links/README.md"));
+// console.log( readDirectory("C:/Users/diana/Documents/Projects/Laboratoria/md-links"));
 
 module.exports = {
   fnIsAbsolute,
@@ -130,4 +118,5 @@ module.exports = {
   readFile,
   readLinks,
   createPathFile,
+  validateLink,
 };
