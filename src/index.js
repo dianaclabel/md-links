@@ -105,3 +105,9 @@ mdLinks("C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md", {
     // => [{ href, text, file, status, ok }, ...]
   })
   .catch((e) => console.error(e));
+
+//ruta directorio no existe :  "C:/Users/diana/Documents/Projects/Laboratoria/md-linksn/files-md"
+//ruta de archivo : "C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md/prueba2.md"
+//ruta de directorio : "C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md"
+
+// module.exports = { mdLinks };

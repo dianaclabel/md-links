@@ -10,6 +10,7 @@ function fnIsAbsolute(route) {
     return path.isAbsolute(route);
   } catch (error) {
     console.log("Error: La ruta no es absoluta ", error);
+    return false;
   }
 }
 
