@@ -34,6 +34,7 @@ function verifyRoute(route) {
 }
 
 // Verificar si es un archivo o directorio
+//devuelve ub string
 
 function veriFyIsFileOrDirectory(route) {
   try {

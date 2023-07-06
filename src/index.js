@@ -58,12 +58,14 @@ function readFileOrDirectory(path, pathtype) {
       const promisesFilesLinks = fileNames
         .filter((fileName) => fileName.endsWith(".md"))
         .map((fileName) => {
+          // se crea ruta de archivo 
           let pathFile = createPathFile(path, fileName);
           console.log("Ruta de archivo creada:", pathFile);
-          //retorna la data - el contenido de archivo en string
+          //lee el archivo y retorna la data - el contenido de archivo en string
           return readFile(pathFile).then((data) => {
             // Array de links (text, href)
             const links = readLinks(data);
+            //links es un array de objetos
             //retornara text , href y filename
             return links.map((link) => {
               return { ...link, file: fileName };
@@ -97,17 +99,17 @@ function readFileOrDirectory(path, pathtype) {
 
 //---------------------------------------------------------------------------------
 
-mdLinks("C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md", {
-  validate: true,
-})
-  .then((links) => {
-    console.log(links);
-    // => [{ href, text, file, status, ok }, ...]
-  })
-  .catch((e) => console.error(e));
+// mdLinks("C:/Users/diana/Documents/Projects/Laboratoria/md-linksn/files-md", {
+//   validate: true,
+// })
+//   .then((links) => {
+//     console.log(links);
+//     // => [{ href, text, file, status, ok }, ...]
+//   })
+//   .catch((e) => console.error(e));
 
 //ruta directorio no existe :  "C:/Users/diana/Documents/Projects/Laboratoria/md-linksn/files-md"
 //ruta de archivo : "C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md/prueba2.md"
 //ruta de directorio : "C:/Users/diana/Documents/Projects/Laboratoria/md-links/files-md"
 
-// module.exports = { mdLinks };
+module.exports = { mdLinks };
