@@ -21,12 +21,12 @@ const mdLinks = (path, options = {}) => {
   }
 
   // Verificación de existencia de la ruta
-  const pathExists = verifyRoute(path);
-  console.log("La ruta existe: " + pathExists);
+  const pathExist = verifyRoute(path);
+  console.log("La ruta existe: " + pathExist);
 
-  if (!pathExists) {
+  if (!pathExist) {
     return new Promise((resolve, reject) => {
-      reject("Rejected: El path ingresado es inválido");
+       reject("Rejected: El path ingresado es inválido");
     });
   }
 
@@ -34,6 +34,10 @@ const mdLinks = (path, options = {}) => {
   console.log("La ruta es de tipo: " + pathType);
 
   return readFileOrDirectory(path, pathType).then((links) => {
+    if(links.length === 0){
+      return Promise.reject("No se encontraron links")
+    }
+
     if (options.validate) {
       const arrPromesas = links.map((link) => {
         // validar el link (status y ok)
@@ -80,8 +84,7 @@ function readFileOrDirectory(path, pathtype) {
     });
   } else if (pathtype === "file") {
     if (!path.endsWith(".md")) {
-      console.error("El archivo no es md");
-      return;
+      return Promise.reject("El archivo no es md");
     }
 
     return readFile(path)
@@ -93,7 +96,6 @@ function readFileOrDirectory(path, pathtype) {
           return { ...link, file: path.split("/").at(-1) };
         });
       })
-      .catch((error) => console.log("Este archivo no se puede leer", error));
   }
 }
 

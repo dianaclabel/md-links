@@ -45,9 +45,7 @@ function veriFyIsFileOrDirectory(route) {
       return "file";
     } else if (stats.isDirectory()) {
       return "directory";
-    } else {
-      return "Desconocido";
-    }
+    } 
   } catch (error) {
     console.log("Error: Archivo o directorio roto ", error);
   }
